@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<head>
+    <title>ToDoApplication</title>
+</head>
+<script>
+    getData();
+    function printDatafrompost(data){
+        console.log("HTML function");
+        var parentElement=document.getElementById("todosdiv");
+        
+        var childElement=document.createElement("div");
+            var grandChild=document.createElement("span");
+            grandChild.innerHTML=data.title;
+            var grandChild2=document.createElement("span");
+            grandChild2.innerHTML=data.description;
+            var grandChild3=document.createElement("button");
+            grandChild3.innerHTML="Delete";
+
+            childElement.appendChild(grandChild);
+            childElement.appendChild(grandChild2);
+            childElement.appendChild(grandChild3);
+            parentElement.appendChild(childElement);
+        
+    }
+    function callbackfrompost(res){
+        res.json().then(printDatafrompost);
+    }
+    function onPress(){
+        var title=document.getElementById("title").value;
+        var description=document.getElementById("description").value;
+        fetch("http://localhost:9000/page1",{
+            method:"POST",
+            body:JSON.stringify({
+               "title":title,
+                "description":description
+                }),
+            headers:
+            {"Content-Type":"application/json"}
+        }).then(callbackfrompost)
+    }
+
+    function printDatafromget(data){
+        
+        var parentElement=document.getElementById("todosdiv");
+        for(var i=0;i<data.length;i++){
+            var childElement=document.createElement("div");
+            var grandChild=document.createElement("span");
+            grandChild.innerHTML=data[i].title;
+            var grandChild2=document.createElement("span");
+            grandChild2.innerHTML=data[i].description;
+            var grandChild3=document.createElement("button");
+            grandChild3.innerHTML="Delete";
+
+            childElement.appendChild(grandChild);
+            childElement.appendChild(grandChild2);
+            childElement.appendChild(grandChild3);
+            parentElement.appendChild(childElement);
+        }
+        
+    }
+    function callbackfromget(res){
+        res.json().then(printDatafromget);
+    }
+    function getData(){
+        fetch("http://localhost:9000/page1",{
+            method:"GET"
+        }).then(callbackfromget);
+    }
+    
+    
+</script>
+<body>
+    title 
+    <input type="text" name="title" id="title" placeholder="Title">
+    description 
+    <input type="text" name="description" id="description" placeholder="Description">
+    <button type="submit" onclick="onPress()">send</button>
+    <div id="todosdiv"></div>
+</body>
